@@ -1,6 +1,25 @@
 const express = require('express');
 const router = express.Router();
 const storage = require('../middlewares/storage');
+const multer = require('multer');
+const upload = multer();
+const auth = require('../controllers/auth');
+const middlewares = require('../middlewares/index');
+const user = require('../controllers/user');
+
+// login endpoint /api/auth/login
+// router.get('/api/auth/login/google', auth.google);
+// router.get('/api/auth/login/facebook', auth.facebook);
+
+router.post('/api/auth/register', auth.register);
+router.post('/api/auth/login', auth.login);
+router.get('/api/auth/whoami', middlewares.mustLogin, auth.whoami);
+
+// use the post method for upload single file
+router.post('/upload/imagekit', middlewares.mustLogin, upload.single('media'), user.uploadPicture);
+
+// use the put method for update a  single file
+router.put('/update/imagekit', middlewares.mustLogin, upload.single('media'), user.updatePicture);
 
 // use the post method for upload single file
 router.post('/upload/single', storage.single('media'), (req, res) => {
