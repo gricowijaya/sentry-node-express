@@ -5,6 +5,8 @@ const Sentry = require('@sentry/node');
 const Tracing = require("@sentry/tracing");
 const router = require('./routes/')
 const morgan = require('morgan');
+const bodyParser = require('body-parser');
+const methodOverride = require('method-override');
 
 const {
     PORT,
@@ -12,7 +14,6 @@ const {
 } = process.env
 
 const app = express();
-
 
 Sentry.init({
   // unique dsn we will use
@@ -42,6 +43,9 @@ app.use(Sentry.Handlers.tracingHandler());
 // logging for morgan
 app.use(morgan('dev'));
 
+app.use(express.json());
+app.use(methodOverride());
+app.use(bodyParser({keepExtensions:true}));
 // All controllers should live here
 app.get("/", function rootHandler(req, res) {
   res.end("Hello world!");
@@ -87,6 +91,7 @@ app.use(function onError(err, req, res, next) {
 });
 
 app.use(router);
+
 
 // to get the image so we can get the static file from the public images
 app.use('/images', express.static('./public/images'));
