@@ -3,7 +3,7 @@ const path = require('path');
 const storage = multer.diskStorage({
     // destination of the file uploads
     destination: (req, file, callback) => {
-        callback(null, './public/images')
+        callback(null, '../public/images')
     },
     // we want to generate new name with Date and the real name  
     filename: (req, file, callback) => {
